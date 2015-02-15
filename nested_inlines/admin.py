@@ -16,11 +16,17 @@ from helpers import AdminErrorList
 class NestedModelAdmin(ModelAdmin):
     class Media:
         css = {'all': ('admin/css/nested.css',)}
-        js = ('admin/js/nested.js',)
+        js = ('admin/js/inlines.js',)
         
+    #Aliona: korekcijos, kad paimtu custom forma. Ideja paimta is cia: https://github.com/Soaa-/django-nested-inlines/pull/15
     def get_form(self, request, obj=None, **kwargs):
+        from django.forms.models import ModelForm
+        if self.form == ModelForm:
+            form = BaseNestedModelForm
+        else:
+            form = self.form
         return super(NestedModelAdmin, self).get_form(
-            request, obj, form=BaseNestedModelForm, **kwargs)
+            request, obj, form=form, **kwargs)
         
     def get_inline_instances(self, request, obj=None):
         inline_instances = []
