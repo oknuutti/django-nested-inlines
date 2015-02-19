@@ -1,30 +1,18 @@
 # django-nested-inlines
 
-## *SilverFix'es Fork bugfix & changes*
-- [inlines.js] **Fixed severe bug with number of TOTAL_FORMS when adding a new nested**
-- [tabular.html] Fixed look 'n feel of the nested table (dynamic colspan handling)
-- [admin.py] Fixed exception using it with a no-deletable inline
-- [project structure] Deleted inlines.min.js
-- [admin.py] NestedModelAdmin was pointing to wrong js filename
-- [admin.py] Fixed a bug that would be skip any custom validation in clean() method
-- [admin.py] [**Big thanks to @nastasi-oq**] Fixed a bug that would be raise exception if save_as_new enabled
-
 ## Overview
 
 [Django issue #9025](http://code.djangoproject.com/ticket/9025)
 
-Patches have been submitted, and repositories forked, but no one likes to use
-either one. Now, nested inlines are available in an easy-to-install package.
+The easy-to-install package from silverfix (https://github.com/silverfix/django-nested-inlines) didn't seem to work directly for Django 1.7.
+There's other forks that provide some separate fixes, but none seemed to work alone,
+so I just merged a couple of forks and now I can use this for my Django 1.7 project.
 
-### Issues
-
-The Javascript portion of this app is currently buggy. The Python portion
-should be solid. Please test and file issues and pull requests to improve
-it!
+The installation and usage info below is copied from silverfix.
 
 ## Installation
 
-`pip install -e git+git://github.com/silverfix/django-nested-inlines.git#egg=django-nested-inlines`
+`pip install -e git+git://github.com/oknuutti/django-nested-inlines.git#egg=django-nested-inlines`
 
 ## Usage
 
@@ -63,10 +51,10 @@ magic happen.
 
 ## Credits
 
-This package is mainly the work of other developers. I've only taken their
-patches and packaged them nicely for ease of use. Credit goes to:
+This package completely the work of other developers. I've only merged their work.
+Credit goes to:
 
-- Gargamel for providing the base patch on the Django ticket.
-- Stefan Klug for providing a fork with the patch applied, and for bugfixes.
-
-See [Stefan Klug's repository](https://github.com/stefanklug/django/tree/nested-inline-support-1.5.x).
+- silverfix
+- spanishdict
+- dimoniet
+- isupeene
