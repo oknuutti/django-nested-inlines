@@ -260,27 +260,35 @@
 			//remove the fk and id values, because these don't exist yet
 			template.find('.original').empty();
 
-
-
 			//postprocess stacked/tabular
+			var formset;
 			if (isTabular) {
-				var formset = template.find('.tabular.inline-related tbody tr.' + formset_prefix + '-not-nested').tabularFormset(options);
+				formset = template.find('.tabular.inline-related tbody tr.' + formset_prefix + '-not-nested').tabularFormset(options);
 				var border_class = (index+1 < nested_inlines.length) ? ' no-bottom-border' : '';
 				var wrapped = $('<tr class="nested-inline-row' + border_class + '"/>').html($('<td colspan="100%"/>').html(template));
 				//insert the formset after the row
 				row.after(wrapped);
 			} else {
-				var formset = template.find(".inline-related").stackedFormset(options);
+				formset = template.find(".inline-related").stackedFormset(options);
 
 				row.after(template);
 			}
+
+      // Does the new row have a parent with its own id? If not, ensure the new
+      // row doesn't have an fk.
+      var $parentPk = $('#id_' + parentPrefix + '-' + rowId + '-id').val();
+      if(!$parentPk) {
+        var $myId = template.find('input[name$=-id]').first();
+        var $myFk = $myId.next();
+        $myFk.val(null);
+      }
 
 			//add a empty row. This will in turn create the nested formsets
 			addRow(options);
 		});
 
 		return nested_inlines.length;
-	};
+	}
 
 
 	function update_props(template, normalized_formset_prefix, formset_prefix) {
@@ -301,17 +309,18 @@
 			}
 		});
 
-	};
+	}
 
 	// This returns the amount of forms in the given formset
 	function get_no_forms(formset_prefix) {
-		formset_prop = $("#id_" + formset_prefix + "-TOTAL_FORMS")
+		var formset_prop = $("#id_" + formset_prefix + "-TOTAL_FORMS");
 		if (!formset_prop.length) {
 			return 0;
 		}
-		return parseInt(formset_prop.attr("autocomplete", "off").val());
+		return parseInt(formset_prop.attr("autocomplete", "off").val(), 10);
 	}
 
+	// This changes the amount of forms in the given formset
 	function change_no_forms(formset_prefix, increase) {
 		var no_forms = get_no_forms(formset_prefix);
 		if (increase) {
@@ -319,7 +328,7 @@
 		} else {
 			$("#id_" + formset_prefix + "-TOTAL_FORMS").attr("autocomplete", "off").val(parseInt(no_forms) - 1);
 		}
-	};
+	}
 
 	// This return the maximum amount of forms in the given formset
 	function get_max_forms(formset_prefix) {
@@ -328,7 +337,7 @@
 			return '';
 		}
 		return parseInt(max_forms);
-	};
+	}
 
 	function addRow(options) {
 		var nextIndex = get_no_forms(options.prefix);
@@ -370,7 +379,7 @@
 		}
 
 		nextIndex = nextIndex + 1;
-	};
+	}
 
 	function insertNewRow(prefix, options) {
 		var template = $("#" + prefix + "-empty");
@@ -385,7 +394,7 @@
 		change_no_forms(prefix, true);
 
 		return row;
-	};
+	}
 
 	function prepareRowTemplate(template, prefix, index, options) {
 		var row = template.clone(true);
@@ -407,7 +416,7 @@
 			updateElementIndex(this, prefix, index);
 		});
 		return row;
-	};
+	}
 
 	function updateElementIndex(el, prefix, ndx) {
 		var id_regex = new RegExp("(" + prefix + "-(\\d+|__prefix__))");
@@ -421,7 +430,7 @@
 		if (el.name) {
 			el.name = el.name.replace(id_regex, replacement);
 		}
-	};
+	}
 
 	/** show or hide the addButton **/
 	function updateAddButton(options) {
