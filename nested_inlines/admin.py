@@ -213,7 +213,7 @@ class NestedModelAdmin(ModelAdmin):
         context = {
             'title': _('Add %s') % force_unicode(opts.verbose_name),
             'adminform': adminForm,
-            'is_popup': "_popup" in request.REQUEST,
+            'is_popup': "_popup" in request.POST,
             'show_delete': False,
             'media': media,
             'inline_admin_formsets': inline_admin_formsets,
@@ -256,7 +256,7 @@ class NestedModelAdmin(ModelAdmin):
                 form_validated = False
                 new_object = obj
             prefixes = {}
-            for FormSet, inline in zip(self.get_formsets(request, new_object), inline_instances):
+            for FormSet, inline in self.get_formsets_with_inlines(request, new_object):
                 prefix = FormSet.get_default_prefix()
                 prefixes[prefix] = prefixes.get(prefix, 0) + 1
                 if prefixes[prefix] != 1 or not prefix:
@@ -278,7 +278,7 @@ class NestedModelAdmin(ModelAdmin):
         else:
             form = ModelForm(instance=obj)
             prefixes = {}
-            for FormSet, inline in zip(self.get_formsets(request, obj), inline_instances):
+            for FormSet, inline in self.get_formsets_with_inlines(request, obj):
                 prefix = FormSet.get_default_prefix()
                 prefixes[prefix] = prefixes.get(prefix, 0) + 1
                 if prefixes[prefix] != 1 or not prefix:
@@ -312,7 +312,7 @@ class NestedModelAdmin(ModelAdmin):
             'adminform': adminForm,
             'object_id': object_id,
             'original': obj,
-            'is_popup': "_popup" in request.REQUEST,
+            'is_popup': "_popup" in request.POST,
             'media': media,
             'inline_admin_formsets': inline_admin_formsets,
             'errors': AdminErrorList(form, formsets),
