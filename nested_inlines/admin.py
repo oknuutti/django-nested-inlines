@@ -141,7 +141,7 @@ class NestedModelAdmin(ModelAdmin):
 
         ModelForm = self.get_form(request)
         formsets = []
-        inline_instances = self.get_inline_instances(request, None)
+        inline_instances = list(self.get_inline_instances(request, None))
         if request.method == 'POST':
             form = ModelForm(request.POST, request.FILES)
             if form.is_valid():
@@ -222,6 +222,7 @@ class NestedModelAdmin(ModelAdmin):
             'django_version_lt_1_6': DJANGO_VERSION < (1, 6)
         }
         context.update(extra_context or {})
+#        assert False, 'add, %s'%inline_admin_formsets
         return self.render_change_form(request, context, form_url=form_url, add=True)
 
     @csrf_protect_m
@@ -320,6 +321,7 @@ class NestedModelAdmin(ModelAdmin):
             'django_version_lt_1_6': DJANGO_VERSION < (1, 6)
         }
         context.update(extra_context or {})
+#        assert False, 'change, %s'%inline_admin_formsets
         return self.render_change_form(request, context, change=True, obj=obj, form_url=form_url)
 
 class NestedInlineModelAdmin(InlineModelAdmin):
